@@ -5,16 +5,19 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 spring:
   datasource:
-    druid:
-      url: jdbc:mysql://113.142.70.214:3306/smilekay?useUnicode=true&characterEncoding=utf-8&useSSL=false
-      username: root
-      password: 123456
-      initial-size: 1
-      min-idle: 1
-      max-active: 20
-      test-on-borrow: true
-      # MySQL 8.x: com.mysql.cj.jdbc.Driver
-      driver-class-name: com.mysql.jdbc.Driver
+#    druid:
+#      url: jdbc:mysql://127.0.0.1:3306/smilekay?useUnicode=true&characterEncoding=utf-8&characterSetResult=utf8&useSSL=false
+#      username: root
+#      password: as@#123DF
+#      initial-size: 1
+#      min-idle: 1
+#      max-active: 20
+#      # MySQL 8.x: com.mysql.cj.jdbc.Driver
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://113.142.70.214:3306/smilekay?useUnicode=true&characterEncoding=utf-8&characterSetResult=utf8&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: as@#123DF
   redis:
     lettuce:
       pool:
@@ -22,5 +25,10 @@ spring:
         max-idle: 8
         max-wait: -1ms
         min-idle: 0
+    port: 8379
+smilekay:
+  jisu:
+    url: https://api.jisuapi.com/news/get
+    appkey: 20ba4743749b352f
 logging:
   config: classpath:logback.xml

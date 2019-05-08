@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,18 +31,19 @@ public class LoginController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public BaseResult login(String loginCode, String password, @RequestParam(required = false) String portal) {
         TbUser tbUser = loginService.login(loginCode, password);
+        String token = UUID.randomUUID().toString();
         if (tbUser == null) {
             return BaseResult.notOk(null);
         } else {
-            String token = UUID.randomUUID().toString();
             try {
                 redisService.put(token, loginCode, 60 * 60 * 24);
             } catch (Exception e) {
                 logger.error("smilekay->login->error:" + e.getMessage());
+                return BaseResult.notOk(null);
             }
         }
         logger.info("smilekay->login->success");
-        return BaseResult.ok();
+        return BaseResult.ok(token);
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
@@ -51,20 +54,40 @@ public class LoginController {
         String pwd = DigestUtils.md5DigestAsHex(password.getBytes());
         tbUser.setPassword(pwd);
         tbUser.setEmail(email);
-        tbUser.setUserType("超级管理员");
+        tbUser.setUserType("1");
         tbUser.setMgrType("1");
         tbUser.setStatus("0");
+        tbUser.setCreateBy("admin");
         tbUser.setCreateDate(new Date());
+        tbUser.setUpdateBy("admin");
         tbUser.setUpdateDate(new Date());
         try {
             int result = loginService.register(tbUser);
             if (result == 1) {
-                //用户已注册
+                logger.error("smilekay->register->error:用户已注册");
                 return BaseResult.notOk(null);
             }
         } catch (Exception e) {
+            logger.error("smilekay->register->error:" + e.getMessage());
             return BaseResult.notOk(null);
         }
+        logger.info("smilekay->register->success");
         return BaseResult.ok();
+    }
+
+    @RequestMapping("logout")
+    public BaseResult logout(String token) {
+        logger.error("smilekay->logout->token:" + token);
+        String loginCode = (String) redisService.get(token);
+        if (loginCode != null) {
+            boolean result = redisService.delete(token);
+            if (result) {
+                result = redisService.delete(loginCode);
+                if (result) {
+                    return BaseResult.ok();
+                }
+            }
+        }
+        return BaseResult.notOk(null);
     }
 }

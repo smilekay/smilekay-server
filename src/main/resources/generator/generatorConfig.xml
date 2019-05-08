@@ -41,5 +41,7 @@
             <!-- mysql 配置 -->
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
+        <table tableName="tb_news">
+        </table>
     </context>
 </generatorConfiguration>
