@@ -33,21 +33,22 @@ public class LoginController {
         TbUser tbUser = loginService.login(loginCode, password);
         String token = UUID.randomUUID().toString();
         if (tbUser == null) {
-            return BaseResult.notOk(null);
+            return BaseResult.notOk(1, "用户不存在");
         } else {
             try {
                 redisService.put(token, loginCode, 60 * 60 * 24);
             } catch (Exception e) {
                 logger.error("smilekay->login->error:" + e.getMessage());
-                return BaseResult.notOk(null);
+                return BaseResult.notOk(-1, "登录失败");
             }
         }
         logger.info("smilekay->login->success");
-        return BaseResult.ok(token);
+        return BaseResult.ok(token, "登录成功");
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public BaseResult register(String userName, String loginCode, String password, String email) {
+        logger.info("smilekay->register->loginCode:" + loginCode);
         TbUser tbUser = new TbUser();
         tbUser.setUserName(userName);
         tbUser.setLoginCode(loginCode);
@@ -64,15 +65,13 @@ public class LoginController {
         try {
             int result = loginService.register(tbUser);
             if (result == 1) {
-                logger.error("smilekay->register->error:用户已注册");
-                return BaseResult.notOk(null);
+                return BaseResult.notOk(1, "用户已注册");
             }
         } catch (Exception e) {
             logger.error("smilekay->register->error:" + e.getMessage());
-            return BaseResult.notOk(null);
+            return BaseResult.notOk(-1, "注册失败");
         }
-        logger.info("smilekay->register->success");
-        return BaseResult.ok();
+        return BaseResult.ok(0, "注册成功");
     }
 
     @RequestMapping("logout")
@@ -84,10 +83,10 @@ public class LoginController {
             if (result) {
                 result = redisService.delete(loginCode);
                 if (result) {
-                    return BaseResult.ok();
+                    return BaseResult.ok(0, "注销成功");
                 }
             }
         }
-        return BaseResult.notOk(null);
+        return BaseResult.notOk(1, "注销失败");
     }
 }

@@ -14,7 +14,7 @@ spring:
 #      max-active: 20
 #      # MySQL 8.x: com.mysql.cj.jdbc.Driver
 #      driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://113.142.70.214:3306/smilekay?useUnicode=true&characterEncoding=utf-8&characterSetResult=utf8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/smilekay?useUnicode=true&characterEncoding=utf-8&characterSetResult=utf8&useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: as@#123DF
