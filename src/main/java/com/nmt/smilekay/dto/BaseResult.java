@@ -20,7 +20,7 @@ public class BaseResult implements Serializable {
     }
 
     public static BaseResult ok(Object data, String success) {
-        return createResult(RESULT_OK, null, success);
+        return createResult(RESULT_OK, data, success);
     }
 
     public static BaseResult ok(Object data) {

@@ -89,4 +89,16 @@ public class LoginController {
         }
         return BaseResult.notOk(1, "注销失败");
     }
+
+    @RequestMapping("check_login")
+    public BaseResult checkLogin(String token) {
+        String loginCode = (String) redisService.get(token);
+        if (loginCode != null) {
+            String json = (String) redisService.get(loginCode);
+            if (json != null) {
+                return BaseResult.ok(0,"用户已登录");
+            }
+        }
+        return BaseResult.notOk(-1,"用户未登录");
+    }
 }
