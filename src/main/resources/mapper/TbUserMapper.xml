@@ -5,16 +5,19 @@
     <!--
       WARNING - @mbg.generated
     -->
+    <result column="id" jdbcType="INTEGER" property="id" />
     <result column="login_code" jdbcType="VARCHAR" property="loginCode" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
-    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="qq_openid" jdbcType="VARCHAR" property="qqOpenid" />
     <result column="wx_openid" jdbcType="VARCHAR" property="wxOpenid" />
     <result column="sina_openid" jdbcType="VARCHAR" property="sinaOpenid" />
+    <result column="is_check" jdbcType="CHAR" property="isCheck" />
+    <result column="integral" jdbcType="INTEGER" property="integral" />
     <result column="user_type" jdbcType="VARCHAR" property="userType" />
     <result column="mgr_type" jdbcType="CHAR" property="mgrType" />
     <result column="pwd_security_level" jdbcType="DECIMAL" property="pwdSecurityLevel" />

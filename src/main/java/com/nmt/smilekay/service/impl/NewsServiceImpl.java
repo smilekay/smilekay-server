@@ -7,16 +7,10 @@ import com.nmt.smilekay.service.NewsService;
 import com.nmt.smilekay.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.*;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import tk.mybatis.mapper.entity.Example;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,22 +57,5 @@ public class NewsServiceImpl implements NewsService {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /**
-     * 解决中文乱码问题
-     *
-     * @return RestTemplate
-     */
-    @Bean
-    public RestTemplate getRestTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        List<HttpMessageConverter<?>> list = restTemplate.getMessageConverters();
-        for (HttpMessageConverter<?> httpMessageConverter : list) {
-            if (httpMessageConverter instanceof StringHttpMessageConverter) {
-                ((StringHttpMessageConverter) httpMessageConverter).setDefaultCharset(Charset.forName("UTF-8"));
-            }
-        }
-        return restTemplate;
     }
 }

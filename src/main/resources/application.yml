@@ -14,7 +14,7 @@ spring:
 #      max-active: 20
 #      # MySQL 8.x: com.mysql.cj.jdbc.Driver
 #      driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/smilekay?useUnicode=true&characterEncoding=utf-8&characterSetResult=utf8&useSSL=false
+    url: jdbc:mysql://192.168.0.212:3306/smilekay?useUnicode=true&characterEncoding=utf-8&characterSetResult=utf8&useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: as@#123DF
@@ -26,9 +26,16 @@ spring:
         max-wait: -1ms
         min-idle: 0
     port: 8379
+    host: 192.168.0.212
 smilekay:
   jisu:
     url: https://api.jisuapi.com/news/get
     appkey: 20ba4743749b352f
+  qq:
+    appid: 101571153
+  sina:
+    app_key: 4097946870
+    app_secret: 03c321218ca1f70992617afd9f7e87e8
+    redirect_uri: http://www.smilekay.com/callback
 logging:
   config: classpath:logback.xml

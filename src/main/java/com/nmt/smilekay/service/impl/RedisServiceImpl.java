@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service("redisService")
@@ -26,4 +28,21 @@ public class RedisServiceImpl implements RedisService {
     public boolean delete(Object key) {
         return redisTemplate.delete(key);
     }
+
+    @Override
+    public void update(String key, Object value) {
+        redisTemplate.opsForValue().getAndSet(key, value);
+    }
+
+    @Override
+    public Set<String> getLoginCodes() {
+        Set<String> loginCodes = new HashSet<>();
+        Set<String> keys = redisTemplate.keys("*");
+        for (String key : keys) {
+            loginCodes.add((String) get(key));
+        }
+        return loginCodes;
+    }
+
+
 }

@@ -54,4 +54,31 @@ public class BaseResult implements Serializable {
         return baseResult;
     }
 
+    public static final String USER_NOT_EXIST = "用户不存在";
+
+    public static final String LOGIN_SUCCESS = "登录成功";
+
+    public static final String LOGIN_FAIL = "登录失败";
+
+    public static final String ALREADY_REGISTER = "用户已注册";
+
+    public static final String REGISTER_SUCCESS = "注册成功";
+
+    public static final String REGISTER_FAIL = "注册失败";
+
+    public static final String LOGOUT_SUCCESS = "注销成功";
+
+    public static final String LOGOUT_FAIL = "注销失败";
+
+    public static final String ALREADY_LOGIN = "用户已登录";
+
+    public static final String NOT_LOGIN = "用户未登录";
+
+    public static final String GET_USER_INFO_SUCCESS = "获取用户信息成功";
+
+    public static final String GET_USER_INFO_FAIL = "获取用户信息失败";
+
+    public static final String SIGN_SUCCESS = "签到成功";
+
+    public static final String SIGN_FAIL = "签到失败";
 }

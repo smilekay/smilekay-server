@@ -37,11 +37,9 @@
                 type="XMLMAPPER"/>
 
         <!-- 配置需要指定生成的数据库和表，% 代表所有表 -->
-        <table tableName="tb_user">
+        <table tableName="tb_video">
             <!-- mysql 配置 -->
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
-        </table>
-        <table tableName="tb_news">
         </table>
     </context>
 </generatorConfiguration>

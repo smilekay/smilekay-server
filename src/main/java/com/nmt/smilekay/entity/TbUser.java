@@ -1,10 +1,19 @@
 package com.nmt.smilekay.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
 @Table(name = "tb_user")
-public class TbUser {
+public class TbUser extends BaseEntity implements Serializable {
+    private static final long serialVersionUID = 50009911446044285L;
+    /**
+     * 用户id
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     /**
      * 登录账号
      */
@@ -59,6 +68,17 @@ public class TbUser {
      */
     @Column(name = "sina_openid")
     private String sinaOpenid;
+
+    /**
+     * 是否已签到
+     */
+    @Column(name = "is_check")
+    private String isCheck;
+
+    /**
+     * 积分
+     */
+    private Integer integral;
 
     /**
      * 用户类型
@@ -150,45 +170,22 @@ public class TbUser {
     private String status;
 
     /**
-     * 创建者
+     * 获取用户id
+     *
+     * @return id - 用户id
      */
-    @Column(name = "create_by")
-    private String createBy;
+    public Integer getId() {
+        return id;
+    }
 
     /**
-     * 创建时间
+     * 设置用户id
+     *
+     * @param id 用户id
      */
-    @Column(name = "create_date")
-    private Date createDate;
-
-    /**
-     * 更新者
-     */
-    @Column(name = "update_by")
-    private String updateBy;
-
-    /**
-     * 更新时间
-     */
-    @Column(name = "update_date")
-    private Date updateDate;
-
-    /**
-     * 备注信息
-     */
-    private String remarks;
-
-    /**
-     * 扩展 String 1
-     */
-    @Column(name = "extend_s1")
-    private String extendS1;
-
-    /**
-     * 扩展 String 2
-     */
-    @Column(name = "extend_s2")
-    private String extendS2;
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     /**
      * 获取登录账号
@@ -368,6 +365,42 @@ public class TbUser {
      */
     public void setSinaOpenid(String sinaOpenid) {
         this.sinaOpenid = sinaOpenid;
+    }
+
+    /**
+     * 获取是否已签到
+     *
+     * @return is_check - 是否已签到
+     */
+    public String getIsCheck() {
+        return isCheck;
+    }
+
+    /**
+     * 设置是否已签到
+     *
+     * @param isCheck 是否已签到
+     */
+    public void setIsCheck(String isCheck) {
+        this.isCheck = isCheck;
+    }
+
+    /**
+     * 获取积分
+     *
+     * @return integral - 积分
+     */
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    /**
+     * 设置积分
+     *
+     * @param integral 积分
+     */
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
     }
 
     /**
@@ -640,129 +673,4 @@ public class TbUser {
         this.status = status;
     }
 
-    /**
-     * 获取创建者
-     *
-     * @return create_by - 创建者
-     */
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    /**
-     * 设置创建者
-     *
-     * @param createBy 创建者
-     */
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
-    }
-
-    /**
-     * 获取创建时间
-     *
-     * @return create_date - 创建时间
-     */
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    /**
-     * 设置创建时间
-     *
-     * @param createDate 创建时间
-     */
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    /**
-     * 获取更新者
-     *
-     * @return update_by - 更新者
-     */
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    /**
-     * 设置更新者
-     *
-     * @param updateBy 更新者
-     */
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    /**
-     * 获取更新时间
-     *
-     * @return update_date - 更新时间
-     */
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    /**
-     * 设置更新时间
-     *
-     * @param updateDate 更新时间
-     */
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    /**
-     * 获取备注信息
-     *
-     * @return remarks - 备注信息
-     */
-    public String getRemarks() {
-        return remarks;
-    }
-
-    /**
-     * 设置备注信息
-     *
-     * @param remarks 备注信息
-     */
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    /**
-     * 获取扩展 String 1
-     *
-     * @return extend_s1 - 扩展 String 1
-     */
-    public String getExtendS1() {
-        return extendS1;
-    }
-
-    /**
-     * 设置扩展 String 1
-     *
-     * @param extendS1 扩展 String 1
-     */
-    public void setExtendS1(String extendS1) {
-        this.extendS1 = extendS1;
-    }
-
-    /**
-     * 获取扩展 String 2
-     *
-     * @return extend_s2 - 扩展 String 2
-     */
-    public String getExtendS2() {
-        return extendS2;
-    }
-
-    /**
-     * 设置扩展 String 2
-     *
-     * @param extendS2 扩展 String 2
-     */
-    public void setExtendS2(String extendS2) {
-        this.extendS2 = extendS2;
-    }
 }
