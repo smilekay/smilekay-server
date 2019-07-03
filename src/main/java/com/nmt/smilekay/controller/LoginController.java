@@ -57,11 +57,12 @@ public class LoginController {
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public BaseResult register(String userName, String loginCode, String password, String email) {
         logger.info("smilekay->register->loginCode:" + loginCode);
-        TbUser tbUser = new TbUser();
-        tbUser.setUserName(userName);
-        tbUser.setLoginCode(loginCode);
-        tbUser.setPassword(SkPasswordEncoder.getInstance().encode(password));
-        tbUser.setEmail(email);
+        TbUser tbUser = TbUser.builder()
+                .userName(userName)
+                .loginCode(loginCode)
+                .password(SkPasswordEncoder.getInstance().encode(password))
+                .email(email)
+                .build();
         try {
             int result = loginService.register(tbUser);
             if (result == 1) {

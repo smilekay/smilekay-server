@@ -13,30 +13,30 @@ public class BaseResult implements Serializable {
     private String result;
     private Object data;
     private String message;
+    private Cursor cursor;
 
-
-    public static BaseResult ok() {
-        return createResult(RESULT_OK, null, SUCCESS);
+    public static BaseResult ok(Object data, Cursor cursor) {
+        return createResult(RESULT_OK, data, cursor, SUCCESS);
     }
 
     public static BaseResult ok(Object data, String success) {
-        return createResult(RESULT_OK, data, success);
+        return createResult(RESULT_OK, data, null, success);
     }
 
     public static BaseResult ok(Object data) {
-        return createResult(RESULT_OK, data, SUCCESS);
+        return createResult(RESULT_OK, data, null, SUCCESS);
     }
 
     public static BaseResult notOk() {
-        return createResult(RESULT_NOT_OK, null, "");
+        return createResult(RESULT_NOT_OK, null, null, "");
     }
 
     public static BaseResult notOk(Object data, String error) {
-        return createResult(RESULT_NOT_OK, data, error);
+        return createResult(RESULT_NOT_OK, data, null, error);
     }
 
     public static BaseResult notOk(Object data) {
-        return createResult(RESULT_NOT_OK, data, "");
+        return createResult(RESULT_NOT_OK, data, null, "");
     }
 
 
@@ -46,13 +46,25 @@ public class BaseResult implements Serializable {
      * @param message
      * @return
      */
-    private static BaseResult createResult(String result, Object data, String message) {
+    private static BaseResult createResult(String result, Object data, Cursor cursor, String message) {
         BaseResult baseResult = new BaseResult();
         baseResult.setResult(result);
         baseResult.setData(data);
+        baseResult.setCursor(cursor);
         baseResult.setMessage(message);
         return baseResult;
     }
+
+    @Data
+    public static class Cursor {
+        private int total;
+        private int offset;
+        private int limit;
+    }
+
+    public static final String RESULT_SUCCESS = "操作成功";
+
+    public static final String RESULT_FAIL = "操作失败";
 
     public static final String USER_NOT_EXIST = "用户不存在";
 

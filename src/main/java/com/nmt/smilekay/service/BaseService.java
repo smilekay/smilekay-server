@@ -1,5 +1,6 @@
 package com.nmt.smilekay.service;
 
+import com.github.pagehelper.PageInfo;
 import com.nmt.smilekay.entity.BaseEntity;
 import tk.mybatis.mapper.entity.Example;
 
@@ -21,4 +22,6 @@ public interface BaseService<T extends BaseEntity> {
     List<T> getAll();
 
     List<T> selectByExample(Example example);
+
+    PageInfo<T> page(int pageNum, int pageSize, T t);
 }

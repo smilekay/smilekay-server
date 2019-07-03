@@ -1,5 +1,7 @@
 package com.nmt.smilekay.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.nmt.smilekay.entity.BaseEntity;
 import com.nmt.smilekay.service.BaseService;
 import com.nmt.smilekay.utils.MyMapper;
@@ -53,6 +55,14 @@ public class BaseServiceImpl<T extends BaseEntity, D extends MyMapper<T>> implem
     @Override
     public List<T> selectByExample(Example example) {
         return dao.selectByExample(example);
+    }
+
+    @Override
+    public PageInfo<T> page(int pageNum, int pageSize, T t) {
+        PageHelper pageHelper = new PageHelper();
+        pageHelper.startPage(pageNum,pageSize);
+        PageInfo<T> pageInfo = new PageInfo<>(dao.select(t));
+        return pageInfo;
     }
 
 }

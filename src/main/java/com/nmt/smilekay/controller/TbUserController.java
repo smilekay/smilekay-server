@@ -21,11 +21,10 @@ import java.util.Set;
 import static com.nmt.smilekay.dto.BaseResult.*;
 
 @RestController
-public class TbUserController {
+@RequestMapping("user")
+public class TbUserController extends BaseController<TbUser, TbUserService> {
     private final Logger logger = LoggerFactory.getLogger(TbUserController.class);
 
-    @Autowired
-    private TbUserService tbUserService;
     @Autowired
     private RedisService redisService;
 
@@ -61,7 +60,7 @@ public class TbUserController {
                     TbUser tbUser = MapperUtils.json2pojo(json, TbUser.class);
                     tbUser.setIsCheck("1");
                     tbUser.setIntegral(tbUser.getIntegral() + 1);
-                    int res = tbUserService.update(tbUser);
+                    int res = getService().update(tbUser);
                     if (res > 0) {
                         //同步修改缓存中的数据
                         redisService.update(loginCode, MapperUtils.obj2json(tbUser));
@@ -83,11 +82,11 @@ public class TbUserController {
     public void initCheck() {
         Example example = new Example(TbUser.class);
         example.createCriteria().andEqualTo("isCheck", "1");
-        List<TbUser> list = tbUserService.selectByExample(example);
+        List<TbUser> list = getService().selectByExample(example);
         Set<String> loginCodes = redisService.getLoginCodes();
         for (TbUser tbUser : list) {
             tbUser.setIsCheck("0");
-            tbUserService.update(tbUser);
+            getService().update(tbUser);
             if (loginCodes.contains(tbUser.getLoginCode())) {
                 try {
                     redisService.update(tbUser.getLoginCode(), MapperUtils.obj2json(tbUser));
