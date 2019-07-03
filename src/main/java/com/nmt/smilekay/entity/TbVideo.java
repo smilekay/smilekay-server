@@ -1,7 +1,6 @@
 package com.nmt.smilekay.entity;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +8,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-@SuperBuilder
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

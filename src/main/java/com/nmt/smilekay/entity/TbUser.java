@@ -1,7 +1,6 @@
 package com.nmt.smilekay.entity;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +10,6 @@ import java.util.Date;
 @Setter
 @ToString
 @Builder
-@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tb_user")
