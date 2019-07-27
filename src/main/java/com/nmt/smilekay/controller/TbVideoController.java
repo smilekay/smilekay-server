@@ -1,8 +1,10 @@
 package com.nmt.smilekay.controller;
 
 import com.nmt.smilekay.dto.BaseResult;
+import com.nmt.smilekay.entity.BaseEntity;
 import com.nmt.smilekay.entity.TbVideo;
 import com.nmt.smilekay.service.TbVideoService;
+import com.nmt.smilekay.utils.SkPasswordEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +22,8 @@ public class TbVideoController extends BaseController<TbVideo, TbVideoService> {
     private final Logger logger = LoggerFactory.getLogger(TbUserController.class);
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public BaseResult save(String name, String title, int type, String tag, String actor, String cover,
-                           @RequestParam(required = false) String remark,
-                           @RequestParam(required = false) String operator) {
+    public BaseResult save(String name, String title, Integer type, String tag, String actor, String cover, String code,
+                           @RequestParam(required = false) String remark, @RequestParam(required = false) String operator) {
         TbVideo tbVideo = TbVideo.builder()
                 .name(name)
                 .title(title)
@@ -30,6 +31,7 @@ public class TbVideoController extends BaseController<TbVideo, TbVideoService> {
                 .tag(tag)
                 .actor(actor)
                 .cover(cover)
+                .code(code)
                 .build();
         if (StringUtils.isNotBlank(remark)) {
             tbVideo.setRemarks(remark);
@@ -38,6 +40,7 @@ public class TbVideoController extends BaseController<TbVideo, TbVideoService> {
             tbVideo.setCreateBy(operator);
             tbVideo.setUpdateBy(operator);
         }
+        logger.info("tbVideo = " + tbVideo.toString());
         int ret = getService().insertSelective(tbVideo);
         if (ret > 0) {
             return BaseResult.ok(0, RESULT_SUCCESS);
@@ -45,4 +48,23 @@ public class TbVideoController extends BaseController<TbVideo, TbVideoService> {
         return BaseResult.notOk(-1, RESULT_FAIL);
     }
 
+    @RequestMapping
+    public BaseResult get(String name) {
+        if (StringUtils.isNotBlank(name)) {
+            TbVideo example = TbVideo.builder().name(name).build();
+            TbVideo tbVideo = (TbVideo) getService().selectOne(example);
+            if (tbVideo != null) {
+                tbVideo.setPlayCount(tbVideo.getPlayCount() + 1);
+                getService().update(tbVideo);
+                return BaseResult.ok(tbVideo, RESULT_SUCCESS);
+            }
+        }
+        return BaseResult.notOk(-1, RESULT_FAIL);
+    }
+
+    @RequestMapping("name")
+    public BaseResult name() {
+        String name = SkPasswordEncoder.getInstance().autoGenerationCode();
+        return BaseResult.ok(name);
+    }
 }

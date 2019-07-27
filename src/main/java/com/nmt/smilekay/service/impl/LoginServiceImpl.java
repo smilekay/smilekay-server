@@ -104,7 +104,7 @@ public class LoginServiceImpl implements LoginService {
     public TbUser register(QQUserInfo userInfo, String openId) {
         TbUser tbUser = new TbUser();
         String loginCode = GeneralUtils.getRandomName();
-        String pwd = loginCode + "p";
+        String pwd = SkPasswordEncoder.getInstance().autoGenerationCode();
         tbUser.setLoginCode(loginCode);
         tbUser.setPassword(SkPasswordEncoder.getInstance().encode(pwd));
         tbUser.setUserName(userInfo.getNickname());
@@ -129,7 +129,7 @@ public class LoginServiceImpl implements LoginService {
     public TbUser register(SinaUserInfo userInfo, String openId) {
         TbUser tbUser = new TbUser();
         String loginCode = GeneralUtils.getRandomName();
-        String pwd = loginCode + "p";
+        String pwd = SkPasswordEncoder.getInstance().autoGenerationCode();
         tbUser.setLoginCode(loginCode);
         tbUser.setPassword(SkPasswordEncoder.getInstance().encode(pwd));
         tbUser.setUserName(userInfo.getName());

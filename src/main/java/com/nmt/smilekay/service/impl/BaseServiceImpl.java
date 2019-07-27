@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.nmt.smilekay.entity.BaseEntity;
 import com.nmt.smilekay.service.BaseService;
+import com.nmt.smilekay.utils.BeanValidator;
 import com.nmt.smilekay.utils.MyMapper;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,13 @@ public class BaseServiceImpl<T extends BaseEntity, D extends MyMapper<T>> implem
 
     @Override
     public int insert(T t) {
+        validator(t);
         return dao.insert(t);
     }
 
     @Override
     public int insertSelective(T t) {
+        validator(t);
         return dao.insertSelective(t);
     }
 
@@ -65,4 +68,7 @@ public class BaseServiceImpl<T extends BaseEntity, D extends MyMapper<T>> implem
         return pageInfo;
     }
 
+    protected void validator(T t) {
+        BeanValidator.validator(t);
+    }
 }

@@ -2,8 +2,9 @@ package com.nmt.smilekay.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -13,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Table(name = "tb_video")
 public class TbVideo extends BaseEntity implements Serializable {
-    private static final long serialVersionUID = -875100156788218170L;
+    private static final long serialVersionUID = 3320118569631773416L;
     /**
      * 视频id
      */
@@ -47,6 +48,11 @@ public class TbVideo extends BaseEntity implements Serializable {
     private String actor;
 
     /**
+     * 编号
+     */
+    private String code;
+
+    /**
      * 封面路径
      */
     private String cover;
@@ -62,4 +68,9 @@ public class TbVideo extends BaseEntity implements Serializable {
      */
     @Column(name = "star_count")
     private Integer starCount;
+
+    /**
+     * 状态，0：正常，1：删除
+     */
+    private Integer status;
 }
