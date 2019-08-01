@@ -6,6 +6,9 @@ import org.springframework.util.DigestUtils;
 import java.util.Date;
 import java.util.Random;
 
+/**
+ * @author mingtao.ni
+ */
 public class SkPasswordEncoder implements PasswordEncoder {
     private static final String[] word = {
             "a", "b", "c", "d", "e", "f", "g", "h",

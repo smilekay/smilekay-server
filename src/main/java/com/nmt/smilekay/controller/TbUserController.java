@@ -1,5 +1,6 @@
 package com.nmt.smilekay.controller;
 
+import com.nmt.smilekay.constant.WebConstant;
 import com.nmt.smilekay.dto.BaseResult;
 import com.nmt.smilekay.dto.UserBaseInfo;
 import com.nmt.smilekay.entity.TbUser;
@@ -11,15 +12,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Set;
 
 import static com.nmt.smilekay.dto.BaseResult.*;
 
+
+/**
+ * @author mingtao.ni
+ */
 @RestController
 @RequestMapping("user")
 public class TbUserController extends BaseController<TbUser, TbUserService> {
@@ -29,7 +36,10 @@ public class TbUserController extends BaseController<TbUser, TbUserService> {
     private RedisService redisService;
 
     @RequestMapping("get_user_info")
-    public BaseResult getUserInfo(String token) {
+    public BaseResult getUserInfo(String token, HttpServletRequest request) {
+        if (request.getSession().getAttribute(WebConstant.SESSION_USER) == null) {
+            return BaseResult.notOk(1, BaseResult.NOT_LOGIN);
+        }
         String loginCode = (String) redisService.get(token);
         if (loginCode != null) {
             String json = (String) redisService.get(loginCode);
@@ -51,7 +61,10 @@ public class TbUserController extends BaseController<TbUser, TbUserService> {
     }
 
     @RequestMapping("sign")
-    public BaseResult attend(String token) {
+    public BaseResult attend(String token, HttpServletRequest request) {
+        if (request.getSession().getAttribute(WebConstant.SESSION_USER) == null) {
+            return BaseResult.notOk(1, BaseResult.NOT_LOGIN);
+        }
         String loginCode = (String) redisService.get(token);
         if (loginCode != null) {
             String json = (String) redisService.get(loginCode);

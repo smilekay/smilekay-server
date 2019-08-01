@@ -1,28 +1,33 @@
 package com.nmt.smilekay.config;
 
+import com.nmt.smilekay.utils.BeanValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+import javax.validation.Validator;
 import java.nio.charset.Charset;
 import java.util.List;
 
 /**
- * 修复axios跨域问题
+ * @author mingtao.ni
  */
-@Configuration
-public class CorsConfig extends WebMvcConfigurationSupport {
-    @Override
-    protected void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowCredentials(true)
-                .allowedMethods("GET", "POST", "DELETE", "PUT")
-                .maxAge(3600);
+@Component
+public class SkBean {
+    @Bean
+    public Validator validator() {
+        return new LocalValidatorFactoryBean();
+    }
+
+    @Bean
+    public BeanValidator beanValidator() {
+        BeanValidator beanValidator = new BeanValidator();
+        beanValidator.setValidator(validator());
+        return beanValidator;
     }
 
     /**

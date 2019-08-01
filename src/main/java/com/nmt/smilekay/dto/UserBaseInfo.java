@@ -3,6 +3,9 @@ package com.nmt.smilekay.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author mingtao.ni
+ */
 @Getter
 @Setter
 public class UserBaseInfo {

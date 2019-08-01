@@ -1,28 +1,33 @@
 package com.nmt.smilekay.controller;
 
+import com.nmt.smilekay.constant.WebConstant;
 import com.nmt.smilekay.dto.BaseResult;
 import com.nmt.smilekay.dto.QQUserInfo;
 import com.nmt.smilekay.dto.SinaAccessToken;
 import com.nmt.smilekay.dto.SinaUserInfo;
-import com.nmt.smilekay.utils.SkPasswordEncoder;
 import com.nmt.smilekay.entity.TbUser;
 import com.nmt.smilekay.service.LoginService;
 import com.nmt.smilekay.service.RedisService;
 import com.nmt.smilekay.service.TbUserService;
 import com.nmt.smilekay.service.ThirdPartyService;
+import com.nmt.smilekay.utils.CookieUtils;
+import com.nmt.smilekay.utils.SkPasswordEncoder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 import static com.nmt.smilekay.dto.BaseResult.*;
 
+/**
+ * @author mingtao.ni
+ */
 @RestController
 public class LoginController {
     private final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -36,15 +41,22 @@ public class LoginController {
     @Autowired
     private TbUserService tbUserService;
 
+
+    @CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public BaseResult login(String loginCode, String password, @RequestParam(required = false) String portal) {
+    public BaseResult login(String loginCode, String password, @RequestParam(required = false) String portal,
+                            HttpServletRequest request, HttpServletResponse response) {
         TbUser tbUser = loginService.login(loginCode, password, false);
         String token = UUID.randomUUID().toString();
         if (tbUser == null) {
-            return BaseResult.notOk(1, USER_NOT_EXIST);
+            return BaseResult.notOk(-1, USER_NOT_EXIST);
         } else {
             try {
                 redisService.put(token, loginCode, 60 * 60 * 24);
+                CookieUtils.setCookie(request, response, WebConstant.SESSION_TOKEN, token, 60 * 60 * 24);
+                if (StringUtils.isNotBlank(portal)) {
+                    response.addHeader(WebConstant.WEB_REDIRECT_URL, portal);
+                }
             } catch (Exception e) {
                 logger.error("smilekay->login->error:" + e.getMessage());
                 return BaseResult.notOk(-1, LOGIN_FAIL);
@@ -66,7 +78,7 @@ public class LoginController {
         try {
             int result = loginService.register(tbUser);
             if (result == 1) {
-                return BaseResult.notOk(1, ALREADY_REGISTER);
+                return BaseResult.notOk(-1, ALREADY_REGISTER);
             }
         } catch (Exception e) {
             logger.error("smilekay->register->error:" + e.getMessage());
@@ -76,19 +88,26 @@ public class LoginController {
     }
 
     @RequestMapping("logout")
-    public BaseResult logout(String token) {
-        logger.error("smilekay->logout->token:" + token);
+    public BaseResult logout(HttpServletRequest request, HttpServletResponse response, String token) {
+        /*logger.error("smilekay->logout->token:" + token);
         String loginCode = (String) redisService.get(token);
         if (loginCode != null) {
             boolean result = redisService.delete(token);
             if (result) {
                 result = redisService.delete(loginCode);
                 if (result) {
+                    CookieUtils.deleteCookie(request, response, WebConstant.SESSION_TOKEN);
                     return BaseResult.ok(0, LOGOUT_SUCCESS);
                 }
             }
+        }*/
+        try {
+            CookieUtils.deleteCookie(request, response, WebConstant.SESSION_TOKEN);
+            return BaseResult.ok(0, LOGOUT_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return BaseResult.notOk(1, LOGOUT_FAIL);
+        return BaseResult.notOk(-1, LOGOUT_FAIL);
     }
 
     @RequestMapping("check_login")
