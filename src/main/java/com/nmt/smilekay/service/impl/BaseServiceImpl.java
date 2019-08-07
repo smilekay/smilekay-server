@@ -13,6 +13,11 @@ import tk.mybatis.mapper.entity.Example;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 public class BaseServiceImpl<T extends BaseEntity, D extends MyMapper<T>> implements BaseService<T> {
     @Getter
     @Autowired

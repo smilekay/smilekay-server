@@ -5,6 +5,11 @@ import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 @Getter
 @Setter
 @ToString

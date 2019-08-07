@@ -15,6 +15,9 @@
     <result column="cover" jdbcType="VARCHAR" property="cover" />
     <result column="play_count" jdbcType="INTEGER" property="playCount" />
     <result column="star_count" jdbcType="INTEGER" property="starCount" />
+    <result column="hd" jdbcType="INTEGER" property="hd" />
+    <result column="mask" jdbcType="INTEGER" property="mask" />
+    <result column="captions" jdbcType="INTEGER" property="captions" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />

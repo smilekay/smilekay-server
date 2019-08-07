@@ -15,6 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 @Service("newsService")
 public class NewsServiceImpl implements NewsService {
     @Autowired

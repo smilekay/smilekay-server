@@ -7,6 +7,11 @@ import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 @Getter
 @Setter
 public class BaseEntity implements Serializable {

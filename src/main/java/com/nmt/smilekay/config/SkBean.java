@@ -14,7 +14,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 @Component
 public class SkBean {

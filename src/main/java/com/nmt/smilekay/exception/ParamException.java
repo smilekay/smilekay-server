@@ -1,5 +1,10 @@
 package com.nmt.smilekay.exception;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 public class ParamException extends RuntimeException{
     public ParamException() {
         super();

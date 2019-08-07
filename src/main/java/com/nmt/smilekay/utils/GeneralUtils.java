@@ -2,9 +2,16 @@ package com.nmt.smilekay.utils;
 
 import java.util.Random;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 public class GeneralUtils {
-    /*
+    /**
      * 生成随机loginCode
+     *
+     * @return
      */
     public static String getRandomName() {
         Random rm = new Random();

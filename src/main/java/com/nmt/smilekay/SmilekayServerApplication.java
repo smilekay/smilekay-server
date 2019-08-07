@@ -6,7 +6,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 @SpringBootApplication
 @EnableScheduling

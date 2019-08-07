@@ -17,7 +17,9 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 public class BaseController<T extends BaseEntity, S extends BaseService> {
 

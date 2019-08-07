@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.Random;
 
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 public class SkPasswordEncoder implements PasswordEncoder {
     private static final String[] word = {

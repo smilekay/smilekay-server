@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 @Getter
 @Setter
 public class UserBaseInfo {
-    private String username;
+    private String userName;
     private String avatar;
     private boolean check;
     private int integral;

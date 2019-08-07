@@ -4,6 +4,11 @@ import com.nmt.smilekay.dto.QQUserInfo;
 import com.nmt.smilekay.dto.SinaAccessToken;
 import com.nmt.smilekay.dto.SinaUserInfo;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 public interface ThirdPartyService {
     String getOpenId(String accessToken);
 

@@ -1,10 +1,7 @@
 package com.nmt.smilekay.controller;
 
 import com.nmt.smilekay.constant.WebConstant;
-import com.nmt.smilekay.dto.BaseResult;
-import com.nmt.smilekay.dto.QQUserInfo;
-import com.nmt.smilekay.dto.SinaAccessToken;
-import com.nmt.smilekay.dto.SinaUserInfo;
+import com.nmt.smilekay.dto.*;
 import com.nmt.smilekay.entity.TbUser;
 import com.nmt.smilekay.service.LoginService;
 import com.nmt.smilekay.service.RedisService;
@@ -15,6 +12,7 @@ import com.nmt.smilekay.utils.SkPasswordEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
@@ -26,7 +24,9 @@ import java.util.UUID;
 import static com.nmt.smilekay.dto.BaseResult.*;
 
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 @RestController
 public class LoginController {
@@ -41,21 +41,22 @@ public class LoginController {
     @Autowired
     private TbUserService tbUserService;
 
-
-    @CrossOrigin(allowedHeaders = "*", allowCredentials = "true")
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public BaseResult login(String loginCode, String password, @RequestParam(required = false) String portal,
                             HttpServletRequest request, HttpServletResponse response) {
         TbUser tbUser = loginService.login(loginCode, password, false);
+        UserBaseInfo userBaseInfo = new UserBaseInfo();
         String token = UUID.randomUUID().toString();
         if (tbUser == null) {
             return BaseResult.notOk(-1, USER_NOT_EXIST);
         } else {
             try {
+                BeanUtils.copyProperties(tbUser, userBaseInfo);
+                userBaseInfo.setCheck(tbUser.getIsCheck().equals("0") ? false : true);
                 redisService.put(token, loginCode, 60 * 60 * 24);
                 CookieUtils.setCookie(request, response, WebConstant.SESSION_TOKEN, token, 60 * 60 * 24);
                 if (StringUtils.isNotBlank(portal)) {
-                    response.addHeader(WebConstant.WEB_REDIRECT_URL, portal);
+                    response.addHeader(WebConstant.HEADER_REDIRECT_URL, portal);
                 }
             } catch (Exception e) {
                 logger.error("smilekay->login->error:" + e.getMessage());
@@ -63,7 +64,7 @@ public class LoginController {
             }
         }
         logger.info("smilekay->login->success");
-        return BaseResult.ok(token, LOGIN_SUCCESS);
+        return BaseResult.ok(userBaseInfo, LOGIN_SUCCESS);
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
@@ -88,21 +89,15 @@ public class LoginController {
     }
 
     @RequestMapping("logout")
-    public BaseResult logout(HttpServletRequest request, HttpServletResponse response, String token) {
-        /*logger.error("smilekay->logout->token:" + token);
-        String loginCode = (String) redisService.get(token);
-        if (loginCode != null) {
-            boolean result = redisService.delete(token);
-            if (result) {
-                result = redisService.delete(loginCode);
-                if (result) {
-                    CookieUtils.deleteCookie(request, response, WebConstant.SESSION_TOKEN);
-                    return BaseResult.ok(0, LOGOUT_SUCCESS);
-                }
-            }
-        }*/
+    public BaseResult logout(HttpServletRequest request, HttpServletResponse response) {
         try {
+            String token = CookieUtils.getCookieValue(request, WebConstant.SESSION_TOKEN);
             CookieUtils.deleteCookie(request, response, WebConstant.SESSION_TOKEN);
+            String loginCode = (String) redisService.get(token);
+            redisService.delete(token);
+            if (StringUtils.isNotBlank(loginCode)) {
+                redisService.delete(loginCode);
+            }
             return BaseResult.ok(0, LOGOUT_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,20 +105,8 @@ public class LoginController {
         return BaseResult.notOk(-1, LOGOUT_FAIL);
     }
 
-    @RequestMapping("check_login")
-    public BaseResult checkLogin(String token) {
-        String loginCode = (String) redisService.get(token);
-        if (loginCode != null) {
-            String json = (String) redisService.get(loginCode);
-            if (json != null) {
-                return BaseResult.ok(0, ALREADY_LOGIN);
-            }
-        }
-        return BaseResult.notOk(-1, NOT_LOGIN);
-    }
-
     @RequestMapping("login/qq")
-    public BaseResult qqLogin(String accessToken) {
+    public BaseResult qqLogin(String accessToken, HttpServletRequest request, HttpServletResponse response ) {
         String openId = thirdPartyService.getOpenId(accessToken);
         Example example = new Example(TbUser.class);
         example.createCriteria().andEqualTo("qqOpenid", openId);
@@ -136,19 +119,22 @@ public class LoginController {
         }
         loginService.login(tbUser.getLoginCode(), tbUser.getPassword(), true);
         String token = UUID.randomUUID().toString();
-
+        UserBaseInfo userBaseInfo = new UserBaseInfo();
         try {
+            BeanUtils.copyProperties(tbUser, userBaseInfo);
+            userBaseInfo.setCheck(tbUser.getIsCheck().equals("0") ? false : true);
             redisService.put(token, tbUser.getLoginCode(), 60 * 60 * 24);
+            CookieUtils.setCookie(request, response, WebConstant.SESSION_TOKEN, token, 60 * 60 * 24);
         } catch (Exception e) {
             logger.error("smilekay->qqLogin->error:" + e.getMessage());
             return BaseResult.notOk(-1, LOGIN_FAIL);
         }
         logger.info("smilekay->qqLogin->success");
-        return BaseResult.ok(token, LOGIN_SUCCESS);
+        return BaseResult.ok(userBaseInfo, LOGIN_SUCCESS);
     }
 
     @RequestMapping("login/sina")
-    public BaseResult sinaLogin(String code) {
+    public BaseResult sinaLogin(String code, HttpServletRequest request, HttpServletResponse response) {
         SinaAccessToken sinaAccessToken = thirdPartyService.getSinaAccessToken(code);
         if (sinaAccessToken != null) {
             Example example = new Example(TbUser.class);
@@ -162,15 +148,18 @@ public class LoginController {
             }
             loginService.login(tbUser.getLoginCode(), tbUser.getPassword(), true);
             String token = UUID.randomUUID().toString();
-
+            UserBaseInfo userBaseInfo = new UserBaseInfo();
             try {
+                BeanUtils.copyProperties(tbUser, userBaseInfo);
+                userBaseInfo.setCheck(tbUser.getIsCheck().equals("0") ? false : true);
                 redisService.put(token, tbUser.getLoginCode(), 60 * 60 * 24);
+                CookieUtils.setCookie(request, response, WebConstant.SESSION_TOKEN, token, 60 * 60 * 24);
             } catch (Exception e) {
                 logger.error("smilekay->sinaLogin->error:" + e.getMessage());
                 return BaseResult.notOk(-1, LOGIN_FAIL);
             }
             logger.info("smilekay->sinaLogin->success");
-            return BaseResult.ok(token, LOGIN_SUCCESS);
+            return BaseResult.ok(userBaseInfo, LOGIN_SUCCESS);
         }
         return BaseResult.notOk(-1, LOGIN_FAIL);
     }

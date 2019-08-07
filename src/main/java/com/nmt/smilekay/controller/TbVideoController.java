@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import static com.nmt.smilekay.dto.BaseResult.RESULT_FAIL;
 import static com.nmt.smilekay.dto.BaseResult.RESULT_SUCCESS;
 
-
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 @RestController
 @RequestMapping("video")

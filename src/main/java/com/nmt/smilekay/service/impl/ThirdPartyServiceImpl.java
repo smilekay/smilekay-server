@@ -13,6 +13,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 @Service("thirdPartyService")
 public class ThirdPartyServiceImpl implements ThirdPartyService {
     @Autowired

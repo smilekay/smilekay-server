@@ -6,6 +6,11 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 @Getter
 @Setter
 @ToString
@@ -68,6 +73,18 @@ public class TbVideo extends BaseEntity implements Serializable {
      */
     @Column(name = "star_count")
     private Integer starCount;
+
+    /**
+     * 高清，0：否，1：是
+     */
+    private Integer hd;
+
+    private Integer mask;
+
+    /**
+     * 字幕，0：无，1：有
+     */
+    private Integer captions;
 
     /**
      * 状态，0：正常，1：删除

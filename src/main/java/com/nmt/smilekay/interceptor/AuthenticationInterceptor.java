@@ -1,7 +1,6 @@
 package com.nmt.smilekay.interceptor;
 
 import com.nmt.smilekay.constant.WebConstant;
-import com.nmt.smilekay.dto.BaseResult;
 import com.nmt.smilekay.entity.TbUser;
 import com.nmt.smilekay.service.RedisService;
 import com.nmt.smilekay.utils.CookieUtils;
@@ -17,10 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.PrintWriter;
+
+import static com.nmt.smilekay.constant.WebConstant.*;
 
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
@@ -34,9 +36,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         logger.info("Interceptor url: " + request.getRequestURL());
         String token = CookieUtils.getCookieValue(request, WebConstant.SESSION_TOKEN);
-        request.getSession().removeAttribute(WebConstant.SESSION_USER);
-        response.setHeader(WebConstant.WEB_EXTRA_HEADER, WebConstant.WEB_REDIRECT_URL);
-        response.addHeader(WebConstant.WEB_REDIRECT_URL, HttpServletUtils.getFullPath(request));
         if (StringUtils.isNotBlank(token)) {
             String loginCode = (String) redisService.get(token);
             if (StringUtils.isNotBlank(loginCode)) {
@@ -46,6 +45,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                         TbUser tbUser = MapperUtils.json2pojo(json, TbUser.class);
                         if (tbUser != null) {
                             request.getSession().setAttribute(WebConstant.SESSION_USER, tbUser);
+                            return true;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -53,7 +53,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
             }
         }
-        return true;
+        response.setHeader(HEADER_ALLOW_ORIGIN, ALLOW_ORIGIN);
+        response.setHeader(HEADER_ALLOW_CREDENTIALS, ALLOW_CREDENTIALS);
+        response.setHeader(HEADER_ALLOW_METHODS, ALLOW_METHODS);
+        response.setHeader(HEADER_MAX_AGE, MAX_AGE);
+        response.setHeader(HEADER_EXTRA_HEADER, HEADER_ACTION);
+        response.addHeader(HEADER_ACTION, WEB_NEED_LOGIN);
+        return false;
     }
 
     @Override

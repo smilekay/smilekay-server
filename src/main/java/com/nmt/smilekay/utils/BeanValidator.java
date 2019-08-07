@@ -7,6 +7,11 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.util.*;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 public class BeanValidator {
 
     private static Validator validator;

@@ -9,6 +9,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
+ */
 @Service("redisService")
 public class RedisServiceImpl implements RedisService {
     @Autowired

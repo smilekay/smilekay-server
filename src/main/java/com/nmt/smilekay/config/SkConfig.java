@@ -8,7 +8,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 @Configuration
 public class SkConfig implements WebMvcConfigurer {
@@ -20,7 +22,7 @@ public class SkConfig implements WebMvcConfigurer {
         registry.addInterceptor(authenticationInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/static/**", "/assets/**")
-                .excludePathPatterns("/login", "/login/*", "/register","/user/get_user_info");
+                .excludePathPatterns("/login", "/login/*", "/register");
     }
 
     /**
@@ -31,7 +33,7 @@ public class SkConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("http://www.smilekay.com")
                 .allowCredentials(true)
                 .allowedMethods("GET", "POST", "DELETE", "PUT")
                 .maxAge(3600);

@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author mingtao.ni
+ * @Author: smilekay
+ * @Description：
+ * @Date: 2019/8/2 20:55
  */
 public class HttpServletUtils {
     public static String getFullPath(HttpServletRequest request) {
