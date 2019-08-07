@@ -123,7 +123,7 @@ public class LoginController {
     }
 
     @RequestMapping("login/qq")
-    public BaseResult qqLogin(String accessToken) {
+    public BaseResult qqLogin(String accessToken, HttpServletRequest request, HttpServletResponse response) {
         String openId = thirdPartyService.getOpenId(accessToken);
         Example example = new Example(TbUser.class);
         example.createCriteria().andEqualTo("qqOpenid", openId);
@@ -139,6 +139,7 @@ public class LoginController {
 
         try {
             redisService.put(token, tbUser.getLoginCode(), 60 * 60 * 24);
+			CookieUtils.setCookie(request, response, WebConstant.SESSION_TOKEN, token, 60 * 60 * 24);
         } catch (Exception e) {
             logger.error("smilekay->qqLogin->error:" + e.getMessage());
             return BaseResult.notOk(-1, LOGIN_FAIL);
@@ -148,7 +149,7 @@ public class LoginController {
     }
 
     @RequestMapping("login/sina")
-    public BaseResult sinaLogin(String code) {
+    public BaseResult sinaLogin(String code, HttpServletRequest request, HttpServletResponse response) {
         SinaAccessToken sinaAccessToken = thirdPartyService.getSinaAccessToken(code);
         if (sinaAccessToken != null) {
             Example example = new Example(TbUser.class);
@@ -165,6 +166,7 @@ public class LoginController {
 
             try {
                 redisService.put(token, tbUser.getLoginCode(), 60 * 60 * 24);
+				CookieUtils.setCookie(request, response, WebConstant.SESSION_TOKEN, token, 60 * 60 * 24);
             } catch (Exception e) {
                 logger.error("smilekay->sinaLogin->error:" + e.getMessage());
                 return BaseResult.notOk(-1, LOGIN_FAIL);
