@@ -106,7 +106,7 @@ public class LoginController {
     }
 
     @RequestMapping("login/qq")
-    public BaseResult qqLogin(String accessToken, HttpServletRequest request, HttpServletResponse response ) {
+    public BaseResult qqLogin(String accessToken, HttpServletRequest request, HttpServletResponse response) {
         String openId = thirdPartyService.getOpenId(accessToken);
         Example example = new Example(TbUser.class);
         example.createCriteria().andEqualTo("qqOpenid", openId);
