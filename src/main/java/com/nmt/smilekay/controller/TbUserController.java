@@ -77,6 +77,8 @@ public class TbUserController extends BaseController<TbUser, TbUserService> {
                             redisService.update(loginCode, MapperUtils.obj2json(tbUser));
                             return BaseResult.ok(0, SIGN_SUCCESS);
                         }
+                    }else {
+                        return BaseResult.notOk(-1, SIGN_ALREADY);
                     }
                 } catch (Exception e) {
                     logger.error("smilekay->attend->error:" + e.getMessage());

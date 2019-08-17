@@ -22,7 +22,7 @@ public class SkConfig implements WebMvcConfigurer {
         registry.addInterceptor(authenticationInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/static/**", "/assets/**")
-                .excludePathPatterns("/login", "/login/*", "/register");
+                .excludePathPatterns("/login", "/login/*", "/register","/news/*");
     }
 
     /**

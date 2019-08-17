@@ -1,6 +1,5 @@
 package com.nmt.smilekay.service;
 
-import com.nmt.smilekay.dto.NewsResponse;
 import com.nmt.smilekay.entity.TbNews;
 
 import java.util.List;
@@ -15,5 +14,5 @@ public interface NewsService {
 
     void addNews(TbNews tbNews);
 
-    NewsResponse getNews(String channel);
+    List<TbNews> getNews(String channel);
 }

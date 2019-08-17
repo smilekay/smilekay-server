@@ -98,4 +98,6 @@ public class BaseResult implements Serializable {
     public static final String SIGN_SUCCESS = "签到成功";
 
     public static final String SIGN_FAIL = "签到失败";
+
+    public static final String SIGN_ALREADY = "今天已经签到";
 }

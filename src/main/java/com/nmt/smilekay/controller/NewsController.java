@@ -29,17 +29,14 @@ public class NewsController {
     @RequestMapping(value = "get", method = RequestMethod.GET)
     public BaseResult getNews(String channel) {
         logger.info("smilekay->news->get:" + channel);
-        NewsResponse newsResponse = newsService.getNews(channel);
-        if (newsResponse != null) {
-            if (newsResponse.getStatus() == 0) {
-                List<TbNews> tbNewsList = newsResponse.getResult().getList();
-                for (TbNews tbNews : tbNewsList) {
-                    tbNews.setChannel(channel);
-                    newsService.addNews(tbNews);
-                }
+        List<TbNews> tbNewsList = newsService.getNews(channel);
+        if (tbNewsList != null) {
+            for (TbNews tbNews : tbNewsList) {
+                tbNews.setChannel(channel);
+                newsService.addNews(tbNews);
             }
-            return BaseResult.ok(newsResponse.getResult().getList());
+            return BaseResult.ok(tbNewsList);
         }
-        return BaseResult.notOk(null);
+        return BaseResult.notOk();
     }
 }

@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import tk.mybatis.mapper.entity.Example;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,14 +53,44 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsResponse getNews(String channel) {
+    public List<TbNews> getNews(String channel) {
+        TbNews build = TbNews.builder().channel(channel).build();
+        List<TbNews> tbNewsList = tbNewsMapper.select(build);
+        if (tbNewsList != null && tbNewsList.size() > 0) {
+            try {
+                String time = tbNewsList.get(0).getTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = sdf.parse(time);
+                String var = sdf.format(date);
+                String now = sdf.format(new Date());
+                if (!var.equals(now)) {
+                    List<TbNews> newsFromInternet = getNewsFromInternet(channel);
+                    if (newsFromInternet != null) {
+                        tbNewsMapper.delete(build);
+                        return newsFromInternet;
+                    }
+                }
+                return tbNewsList;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return getNewsFromInternet(channel);
+        }
+        return null;
+    }
+
+    private List<TbNews> getNewsFromInternet(String channel) {
         String path = url + "?channel={channel}&start=0&num=10&appkey={appkey}";
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(2);
         map.put("channel", channel);
         map.put("appkey", appkey);
-        String response = restTemplate.getForObject(path, String.class, map);
         try {
-            return MapperUtils.json2pojo(response, NewsResponse.class);
+            String response = restTemplate.getForObject(path, String.class, map);
+            NewsResponse newsResponse = MapperUtils.json2pojo(response, NewsResponse.class);
+            if (newsResponse != null && newsResponse.getStatus() == 0) {
+                return newsResponse.getResult().getList();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
