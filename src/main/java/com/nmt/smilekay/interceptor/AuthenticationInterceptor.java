@@ -35,30 +35,30 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         logger.info("Interceptor url: " + request.getRequestURL());
-        String token = CookieUtils.getCookieValue(request, WebConstant.SESSION_TOKEN);
-        if (StringUtils.isNotBlank(token)) {
-            String loginCode = (String) redisService.get(token);
-            if (StringUtils.isNotBlank(loginCode)) {
-                String json = (String) redisService.get(loginCode);
-                if (StringUtils.isNotBlank(json)) {
-                    try {
-                        TbUser tbUser = MapperUtils.json2pojo(json, TbUser.class);
-                        if (tbUser != null) {
-                            request.getSession().setAttribute(WebConstant.SESSION_USER, tbUser);
-                            return true;
+        TbUser tbUser = (TbUser) request.getSession().getAttribute(SESSION_USER);
+        if (tbUser != null) {
+            return true;
+        } else {
+            String token = CookieUtils.getCookieValue(request, WebConstant.SESSION_TOKEN);
+            if (StringUtils.isNotBlank(token)) {
+                String loginCode = (String) redisService.get(token);
+                if (StringUtils.isNotBlank(loginCode)) {
+                    String json = (String) redisService.get(loginCode);
+                    if (StringUtils.isNotBlank(json)) {
+                        try {
+                            tbUser = MapperUtils.json2pojo(json, TbUser.class);
+                            if (tbUser != null) {
+                                request.getSession().setAttribute(SESSION_USER, tbUser);
+                                return true;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
                 }
             }
+            setResponseHeaders(response);
         }
-        response.setHeader(HEADER_ALLOW_ORIGIN, ALLOW_ORIGIN);
-        response.setHeader(HEADER_ALLOW_CREDENTIALS, ALLOW_CREDENTIALS);
-        response.setHeader(HEADER_ALLOW_METHODS, ALLOW_METHODS);
-        response.setHeader(HEADER_MAX_AGE, MAX_AGE);
-        response.setHeader(HEADER_EXTRA_HEADER, HEADER_ACTION);
-        response.addHeader(HEADER_ACTION, WEB_NEED_LOGIN);
         return false;
     }
 
@@ -70,5 +70,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
 
+    }
+
+    private void setResponseHeaders(HttpServletResponse response) {
+        response.setHeader(HEADER_ALLOW_ORIGIN, ALLOW_ORIGIN);
+        response.setHeader(HEADER_ALLOW_CREDENTIALS, ALLOW_CREDENTIALS);
+        response.setHeader(HEADER_ALLOW_METHODS, ALLOW_METHODS);
+        response.setHeader(HEADER_MAX_AGE, MAX_AGE);
+        response.setHeader(HEADER_EXTRA_HEADER, HEADER_ACTION);
+        response.addHeader(HEADER_ACTION, WEB_NEED_LOGIN);
     }
 }

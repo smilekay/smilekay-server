@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
+import static com.nmt.smilekay.constant.WebConstant.SESSION_USER;
 import static com.nmt.smilekay.dto.BaseResult.*;
 
 /**
@@ -93,6 +94,7 @@ public class LoginController {
         try {
             String token = CookieUtils.getCookieValue(request, WebConstant.SESSION_TOKEN);
             CookieUtils.deleteCookie(request, response, WebConstant.SESSION_TOKEN);
+            request.getSession().removeAttribute(SESSION_USER);
             String loginCode = (String) redisService.get(token);
             redisService.delete(token);
             if (StringUtils.isNotBlank(loginCode)) {
