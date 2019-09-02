@@ -31,9 +31,9 @@ public class BaseController<T extends BaseEntity, S extends BaseService> {
     @RequestMapping(value = "page/{pageNum}/{pageSize}", method = RequestMethod.GET)
     public BaseResult page(@PathVariable int pageNum, @PathVariable int pageSize,
                            @RequestParam(required = false) String tJson, HttpServletRequest request) throws Exception {
-        if (request.getSession().getAttribute(WebConstant.SESSION_USER) == null) {
-            return BaseResult.notOk(1, BaseResult.NOT_LOGIN);
-        }
+//        if (request.getSession().getAttribute(WebConstant.SESSION_USER) == null) {
+//            return BaseResult.notOk(1, BaseResult.NOT_LOGIN);
+//        }
         T t = null;
         if (StringUtils.isNotBlank(tJson)) {
             t = MapperUtils.json2pojo(tJson, (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);

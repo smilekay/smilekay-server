@@ -27,9 +27,10 @@ public class ArticleController extends BaseController<TbArticle, ArticleService>
     private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public BaseResult save(String title, String content, HttpServletRequest request) {
+    public BaseResult save(String title, String content, String introduce, HttpServletRequest request) {
         TbUser tbUser = (TbUser) request.getSession().getAttribute(SESSION_USER);
-        TbArticle tbArticle = TbArticle.builder().title(title).content(content).userId(tbUser.getId()).build();
+        TbArticle tbArticle = TbArticle.builder().title(title).content(content).introduce(introduce)
+                .userId(tbUser.getId()).userName(tbUser.getUserName()).build();
         tbArticle.setCreateBy(tbUser.getLoginCode());
         int ret = this.getService().insertSelective(tbArticle);
         if (ret > 0) {

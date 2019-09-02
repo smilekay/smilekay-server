@@ -7,11 +7,15 @@
     -->
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="introduce" jdbcType="VARCHAR" property="introduce" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="images" jdbcType="VARCHAR" property="images" />
     <result column="top" jdbcType="INTEGER" property="top" />
     <result column="read_count" jdbcType="INTEGER" property="readCount" />
     <result column="reply_count" jdbcType="INTEGER" property="replyCount" />
+    <result column="reply_id" jdbcType="INTEGER" property="replyId" />
+    <result column="reply_name" jdbcType="VARCHAR" property="replyName" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
@@ -20,5 +24,6 @@
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
     <result column="extend_s1" jdbcType="VARCHAR" property="extendS1" />
     <result column="extend_s2" jdbcType="VARCHAR" property="extendS2" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
 </mapper>
