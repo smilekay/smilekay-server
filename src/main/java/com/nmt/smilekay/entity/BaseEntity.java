@@ -1,5 +1,6 @@
 package com.nmt.smilekay.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,7 @@ public class BaseEntity implements Serializable {
      * 创建时间
      */
     @Column(name = "create_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date createDate;
 
     /**
@@ -38,6 +40,7 @@ public class BaseEntity implements Serializable {
      * 更新时间
      */
     @Column(name = "update_date")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date updateDate;
 
     /**

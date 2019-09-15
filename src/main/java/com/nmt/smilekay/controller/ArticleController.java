@@ -4,6 +4,8 @@ import com.nmt.smilekay.dto.BaseResult;
 import com.nmt.smilekay.entity.TbArticle;
 import com.nmt.smilekay.entity.TbUser;
 import com.nmt.smilekay.service.ArticleService;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +29,10 @@ public class ArticleController extends BaseController<TbArticle, ArticleService>
     private final Logger logger = LoggerFactory.getLogger(ArticleController.class);
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public BaseResult save(String title, String content, String introduce, HttpServletRequest request) {
+    public BaseResult save(String title, String content, HttpServletRequest request) {
         TbUser tbUser = (TbUser) request.getSession().getAttribute(SESSION_USER);
+        Document document = Jsoup.parse(content);
+        String introduce = document.text().length() > 30 ? document.text().substring(0, 30) + ".." : document.text();
         TbArticle tbArticle = TbArticle.builder().title(title).content(content).introduce(introduce)
                 .userId(tbUser.getId()).userName(tbUser.getUserName()).build();
         tbArticle.setCreateBy(tbUser.getLoginCode());
